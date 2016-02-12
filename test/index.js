@@ -5,7 +5,15 @@ process.on('unhandledRejection', (reason, p) => {
 
 var assert = require('assert')
 
-global.ioc = require('../src/index')
+console.log(process.env.build === 'false')
+
+global.ioc = (function () {
+  if (process.env.build === 'false') {
+    return require('../src/index')
+  }
+  return require('../lib/index')
+})()
+
 ioc.get('test').setBasePath(__dirname)
 
 describe('Ioc.module.basic', function () {

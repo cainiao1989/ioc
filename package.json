@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec --require babel-core/register",
+    "testDev": "env build=false ./node_modules/.bin/mocha --reporter spec --require babel-core/register",
     "build": "rm -rf ./lib; ./node_modules/.bin/babel -d lib src"
   },
   "author": "",
