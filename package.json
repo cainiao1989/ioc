@@ -2,6 +2,7 @@
   "name": "kns-ioc",
   "description": "Node.js promise based inversion of control",
   "keywords": [
+    "kns",
     "inversion of control",
     "ioc",
     "dependency",
