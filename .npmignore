@@ -1,4 +1,6 @@
 src/
 test/
+test_src/
 .babelrc
 .npmignore
+.travis.yml

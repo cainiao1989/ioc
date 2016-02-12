@@ -4,9 +4,11 @@
   "description": "Node.js promise based inversion of control",
   "main": "lib/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec --require babel-core/register",
-    "testDev": "env build=false ./node_modules/.bin/mocha --reporter spec --require babel-core/register",
-    "build": "rm -rf ./lib; ./node_modules/.bin/babel -d lib src"
+    "test": "./node_modules/.bin/mocha --reporter spec",
+    "testDev": "./node_modules/.bin/mocha test_src --reporter spec --require babel-core/register",
+    "buildSrc": "rm -rf ./lib; ./node_modules/.bin/babel -d lib src",
+    "buildTestSrc": "rm -rf ./test; ./node_modules/.bin/babel -d test test_src",
+    "build": "npm run buildSrc; npm run buildTestSrc"
   },
   "author": "",
   "license": "ISC",
