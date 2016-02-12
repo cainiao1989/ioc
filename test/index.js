@@ -5,8 +5,6 @@ process.on('unhandledRejection', (reason, p) => {
 
 var assert = require('assert')
 
-console.log(process.env.build === 'false')
-
 global.ioc = (function () {
   if (process.env.build === 'false') {
     return require('../src/index')
