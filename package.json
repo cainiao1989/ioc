@@ -1,6 +1,38 @@
 {
   "name": "kns-ioc",
+  "description": "Node.js promise based inversion of control",
+  "keywords": [
+    "inversion of control",
+    "ioc",
+    "dependency",
+    "dependency injection",
+    "di",
+    "components",
+    "async",
+    "asynchronous",
+    "promise",
+    "framework",
+    "library",
+    "lib",
+    "node",
+    "node.js",
+    "nodejs",
+    "es7",
+    "es2016",
+    "es6",
+    "es2015"
+  ],
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kuul-node-stuff/ioc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kuul-node-stuff/ioc/issues"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
   "description": "Node.js promise based inversion of control",
   "main": "lib/index.js",
   "scripts": {
