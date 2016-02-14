@@ -1,23 +1,25 @@
-var ModuleResolver = require('./moduleResolver')
-var path = require('path')
+let Container = require('./container')
+let Module = require('./module.js')
 
 class Ioc {
   constructor () {
-    this.basePath = process.cwd()
-    this.replacements = {}
+    this.containers = {}
   }
 
-  setBasePath (basePath) {
-    this.basePath = path.normalize( basePath )
-    return this
+  get (name) {
+    if (this.containers[name] === undefined) {
+      this.containers[name] = new Container()
+    }
+    return this.containers[name]
   }
 
-  module (modulePath) {
-    return new ModuleResolver({
-      ioc: this,
-      modulePath: modulePath
-    })
+  createModule (options) {
+    return new Module(options)
+  }
+
+  createContainer () {
+    return new Container()
   }
 }
 
-module.exports = Ioc
+module.exports = new Ioc()

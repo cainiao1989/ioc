@@ -1,21 +1,29 @@
-var ModuleResolver = require('./moduleResolver')
+let ModuleResolver = require('./moduleResolver')
+let asyncToGenerator = require('./asyncToGenerator')
 
 class Module {
   static createDependency (name, value) {
-
-    if ( typeof value === 'string' ) {
+    if ( value.constructor.name == 'String' ) {
       return {
         name: name,
-        path: value,
-        type: 'module'
+        modulePath: value,
+        type: 'modulePath'
       }
     }
 
-    if ( value instanceof ModuleResolver.constructor ) {
+    if ( value.constructor.name == 'ModuleResolver' ) {
       return {
         name: name,
         moduleResolver: value,
         type: 'moduleResolver'
+      }
+    }
+
+    if ( value.constructor.name == 'Module' ) {
+      return {
+        name: name,
+        module: value,
+        type: 'module'
       }
     }
 
@@ -30,27 +38,37 @@ class Module {
     }
   }
 
-  static createDependencyPromise (name, value) {
+  static createDependencyGenerator (name, value) {
     return {
       name: name,
-      promise: value,
-      type: 'promise'
+      function: asyncToGenerator(value),
+      type: 'generator'
     }
   }
 
-  static createDependencyExecutor (name, value) {
+  static createDependencyGeneratorOnce (name, value) {
     return {
       name: name,
-      executor: value,
-      type: 'executor'
+      function: asyncToGenerator(value),
+      resolved: false,
+      type: 'generatorOnce'
     }
   }
 
-  static createDependencyFunction (name, value) {
+  static createDependencyAsync (name, value) {
     return {
       name: name,
       function: value,
-      type: 'function'
+      type: 'async'
+    }
+  }
+
+  static createDependencyAsyncOnce (name, value) {
+    return {
+      name: name,
+      function: value,
+      resolved: false,
+      type: 'asyncOnce'
     }
   }
 
@@ -76,24 +94,31 @@ class Module {
     return this
   }
 
-  dependencyPromise (name, value) {
-    this.dependencies[name] = Module.createDependencyPromise(name, value)
+  dependencyGenerator (name, value) {
+    this.dependencies[name] = Module.createDependencyGenerator(name, value)
     return this
   }
 
-  dependencyExecutor (name, value) {
-    this.dependencies[name] = Module.createDependencyExecutor(name, value)
+  dependencyGeneratorOnce (name, value) {
+    this.dependencies[name] = Module.createDependencyGeneratorOnce(name, value)
     return this
   }
 
-  dependencyFunction (name, value) {
-    this.dependencies[name] = Module.createDependencyFunction(name, value)
+  dependencyAsync (name, value) {
+    this.dependencies[name] = Module.createDependencyAsync(name, value)
+    return this
+  }
+
+  dependencyAsyncOnce (name, value) {
+    this.dependencies[name] = Module.createDependencyAsyncOnce(name, value)
     return this
   }
 
   module (moduleExecutor) {
     this.moduleExecutor = moduleExecutor
-    this.nodeModule.exports = this
+    if (this.nodeModule instanceof Object && this.nodeModule.exports) {
+      this.nodeModule.exports = this
+    }
     return this
   }
 }

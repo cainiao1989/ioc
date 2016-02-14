@@ -1,4 +1,6 @@
 ioc.createModule(module)
   .module(function (dep, resolve, reject) {
-    resolve('database ok')
+    setTimeout(() => {
+      resolve('database ok')
+    }, 0)
   })

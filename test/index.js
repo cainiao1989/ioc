@@ -10,7 +10,7 @@ process.on('unhandledRejection', (reason, p) => {
 var assert = require('assert');
 
 global.ioc = function () {
-  if (require('path').basename(__dirname) === 'test_src') {
+  if (require('path').basename(__dirname) === 'test-src') {
     return require('../src/index');
   }
   return require('../lib/index');
@@ -18,7 +18,7 @@ global.ioc = function () {
 
 ioc.get('test').setBasePath(__dirname);
 
-describe('Ioc.module.basic', function () {
+describe('module.basic', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
       let module = yield ioc.get('test').module('modules/config').resolve();
@@ -29,7 +29,29 @@ describe('Ioc.module.basic', function () {
   });
 });
 
-describe('Ioc.module.singleton', function () {
+describe('module.asyncFunction', function () {
+  it('should return module', function (done) {
+    _asyncToGenerator(function* () {
+      let module = yield ioc.get('test').module('modules/config-async-function').resolve();
+
+      assert.equal(module, 'config ok');
+      done();
+    })();
+  });
+});
+
+describe('module.generatorFunction', function () {
+  it('should return module', function (done) {
+    _asyncToGenerator(function* () {
+      let module = yield ioc.get('test').module('modules/config-generator-function').resolve();
+
+      assert.equal(module, 'config ok');
+      done();
+    })();
+  });
+});
+
+describe('module.singleton', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
       let singleton = yield ioc.get('test').module('modules/singleton').get();
@@ -41,7 +63,7 @@ describe('Ioc.module.singleton', function () {
   });
 });
 
-describe('Ioc.module.factory', function () {
+describe('module.factory', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
       let factory = yield ioc.get('test').module('modules/factory').get();
@@ -53,7 +75,7 @@ describe('Ioc.module.factory', function () {
   });
 });
 
-describe('Ioc.module.dependency', function () {
+describe('module.dependency', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
       let module = yield ioc.get('test').module('modules/dependency').resolve();
@@ -62,43 +84,115 @@ describe('Ioc.module.dependency', function () {
       assert.equal(module.module2, 'config ok');
       assert.equal(module.moduleResolver, 'config ok');
       assert.equal(module.value, 'value ok');
-      assert.equal(module.promise, 'promise ok');
-      assert.equal(module.executor, 'executor ok');
-      assert.equal(module.function, 'function ok');
+      assert.deepEqual(module.generator, { name: 'generator ok', count: 1 });
+      assert.deepEqual(module.generatorOnce, { name: 'generatorOnce ok', count: 1 });
+      assert.deepEqual(module.async, { name: 'async ok', count: 1 });
+      assert.deepEqual(module.asyncOnce, { name: 'asyncOnce ok', count: 1 });
+      assert.deepEqual(module.promise, { name: 'promise ok', count: 1 });
+      assert.deepEqual(module.promiseOnce, { name: 'promiseOnce ok', count: 1 });
       done();
     })();
   });
 });
 
-describe('Ioc.module.extend', function () {
+describe('module.dependency.once', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
-      let module = yield ioc.get('test').module('modules/dependency').extend('module', 'modules/database').extend('moduleResolver', ioc.get('test').module('modules/database')).extendValue('value', 'extendValue ok').extendPromise('promise', new Promise(function (resolve, reject) {
-        resolve('extendPromise ok');
-      })).extendExecutor('executor', function (resolve, reject) {
-        resolve('extendExecutor ok');
-      }).extendFunction('function', function () {
-        return new Promise(function (resolve, reject) {
-          resolve('extendFunction ok');
+      let module = yield ioc.get('test').module('modules/dependency').resolve();
+
+      assert.equal(module.module, 'config ok');
+      assert.equal(module.module2, 'config ok');
+      assert.equal(module.moduleResolver, 'config ok');
+      assert.equal(module.value, 'value ok');
+      assert.deepEqual(module.generator, { name: 'generator ok', count: 2 });
+      assert.deepEqual(module.generatorOnce, { name: 'generatorOnce ok', count: 1 });
+      assert.deepEqual(module.async, { name: 'async ok', count: 2 });
+      assert.deepEqual(module.asyncOnce, { name: 'asyncOnce ok', count: 1 });
+      assert.deepEqual(module.promise, { name: 'promise ok', count: 2 });
+      assert.deepEqual(module.promiseOnce, { name: 'promiseOnce ok', count: 1 });
+      done();
+    })();
+  });
+});
+
+describe('moduleResolver.extend', function () {
+  it('should return module', function (done) {
+    _asyncToGenerator(function* () {
+      let moduleResolver = ioc.get('test').module('modules/dependency').extend('module', 'modules/database').extend('moduleResolver', ioc.get('test').module('modules/database')).extendValue('value', 'extendValue ok').extendGenerator('generator', function () {
+        let count = 0;
+        return function* () {
+          count++;
+          return { name: 'extendGenerator ok', count: count };
+        };
+      }()).extendGeneratorOnce('generatorOnce', function () {
+        let count = 0;
+        return function* () {
+          count++;
+          return { name: 'extendGeneratorOnce ok', count: count };
+        };
+      }()).extendAsync('async', function () {
+        let count = 0;
+        return _asyncToGenerator(function* () {
+          count++;
+          return { name: 'extendAsync ok', count: count };
         });
-      }).extendValue('extendValue', 'extendValue ok').resolve();
+      }()).extendAsyncOnce('asyncOnce', function () {
+        let count = 0;
+        return _asyncToGenerator(function* () {
+          count++;
+          return { name: 'extendAsyncOnce ok', count: count };
+        });
+      }()).extendAsync('promise', function () {
+        let count = 0;
+        return function () {
+          count++;
+          return new Promise(function (resolve, reject) {
+            resolve({ name: 'extendPromise ok', count: count });
+          });
+        };
+      }()).extendAsyncOnce('promiseOnce', function () {
+        let count = 0;
+        return function () {
+          count++;
+          return new Promise(function (resolve, reject) {
+            resolve({ name: 'extendPromiseOnce ok', count: count });
+          });
+        };
+      }());
+
+      let module = yield moduleResolver.resolve();
 
       assert.equal(module.module, 'database ok');
       assert.equal(module.moduleResolver, 'database ok');
       assert.equal(module.value, 'extendValue ok');
-      assert.equal(module.promise, 'extendPromise ok');
-      assert.equal(module.executor, 'extendExecutor ok');
-      assert.equal(module.function, 'extendFunction ok');
-      assert.equal(module.extendValue, 'extendValue ok');
+      assert.deepEqual(module.generator, { name: 'extendGenerator ok', count: 1 });
+      assert.deepEqual(module.generatorOnce, { name: 'extendGeneratorOnce ok', count: 1 });
+      assert.deepEqual(module.async, { name: 'extendAsync ok', count: 1 });
+      assert.deepEqual(module.asyncOnce, { name: 'extendAsyncOnce ok', count: 1 });
+      assert.deepEqual(module.promise, { name: 'extendPromise ok', count: 1 });
+      assert.deepEqual(module.promiseOnce, { name: 'extendPromiseOnce ok', count: 1 });
+
+      module = yield moduleResolver.resolve();
+
+      assert.equal(module.module, 'database ok');
+      assert.equal(module.moduleResolver, 'database ok');
+      assert.equal(module.value, 'extendValue ok');
+      assert.deepEqual(module.generator, { name: 'extendGenerator ok', count: 2 });
+      assert.deepEqual(module.generatorOnce, { name: 'extendGeneratorOnce ok', count: 1 });
+      assert.deepEqual(module.async, { name: 'extendAsync ok', count: 2 });
+      assert.deepEqual(module.asyncOnce, { name: 'extendAsyncOnce ok', count: 1 });
+      assert.deepEqual(module.promise, { name: 'extendPromise ok', count: 2 });
+      assert.deepEqual(module.promiseOnce, { name: 'extendPromiseOnce ok', count: 1 });
+
       done();
     })();
   });
 });
 
-describe('Ioc.set.path', function () {
+describe('moduleReplace.set.modulePath', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
-      var testIoc = ioc.createIoc().setBasePath(__dirname);
+      var testIoc = ioc.createContainer().setBasePath(__dirname);
       testIoc.module('modules/replace').set('modules/config');
 
       let module = yield testIoc.module('modules/replace').resolve();
@@ -108,10 +202,10 @@ describe('Ioc.set.path', function () {
   });
 });
 
-describe('Ioc.set.moduleResolver', function () {
+describe('moduleReplace.set.moduleResolver', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
-      var testIoc = ioc.createIoc().setBasePath(__dirname);
+      var testIoc = ioc.createContainer().setBasePath(__dirname);
       testIoc.module('modules/replace').set(ioc.get('test').module('modules/config'));
 
       let module = yield testIoc.module('modules/replace').resolve();
@@ -121,10 +215,29 @@ describe('Ioc.set.moduleResolver', function () {
   });
 });
 
-describe('Ioc.set.value', function () {
+describe('moduleReplace.set.module', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
-      var testIoc = ioc.createIoc().setBasePath(__dirname);
+      var testIoc = ioc.createContainer().setBasePath(__dirname);
+      testIoc.module('modules/replace').set(ioc.createModule().module(function (dep, resolve, reject) {
+        resolve('config ok');
+      }));
+
+      testIoc.module('modules/replace2').set(ioc.createModule().dependency('replace', 'modules/replace').module(function (dep, resolve, reject) {
+        resolve(dep);
+      }));
+
+      let module = yield testIoc.module('modules/replace2').resolve();
+      assert.equal(module.replace, 'config ok');
+      done();
+    })();
+  });
+});
+
+describe('moduleReplace.set.value', function () {
+  it('should return module', function (done) {
+    _asyncToGenerator(function* () {
+      var testIoc = ioc.createContainer().setBasePath(__dirname);
       testIoc.module('modules/replace').setValue('value ok');
 
       let module = yield testIoc.module('modules/replace').resolve();
@@ -134,49 +247,247 @@ describe('Ioc.set.value', function () {
   });
 });
 
-describe('Ioc.set.promise', function () {
+describe('moduleReplace.set.generator', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
-      var testIoc = ioc.createIoc().setBasePath(__dirname);
-      testIoc.module('modules/replace').setPromise(new Promise(function (resolve, rejct) {
-        resolve('promise ok');
-      }));
+      var testIoc = ioc.createContainer().setBasePath(__dirname);
+      testIoc.module('modules/replace').setGenerator(function () {
+        let count = 0;
+        return function* () {
+          count++;
+          return { name: 'generator ok', count: count };
+        };
+      }());
 
       let module = yield testIoc.module('modules/replace').resolve();
-      assert.equal(module, 'promise ok');
+      assert.deepEqual(module, { name: 'generator ok', count: 1 });
+
+      module = yield testIoc.module('modules/replace').resolve();
+      assert.deepEqual(module, { name: 'generator ok', count: 2 });
+
       done();
     })();
   });
 });
 
-describe('Ioc.set.executor', function () {
+describe('moduleReplace.set.generatorOnce', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
-      var testIoc = ioc.createIoc().setBasePath(__dirname);
-      testIoc.module('modules/replace').setExecutor(function (resolve, reject) {
-        resolve('executor ok');
-      });
+      var testIoc = ioc.createContainer().setBasePath(__dirname);
+      testIoc.module('modules/replace').setGeneratorOnce(function () {
+        let count = 0;
+        return function* () {
+          count++;
+          return { name: 'generatorOnce ok', count: count };
+        };
+      }());
 
       let module = yield testIoc.module('modules/replace').resolve();
-      assert.equal(module, 'executor ok');
+      assert.deepEqual(module, { name: 'generatorOnce ok', count: 1 });
+
+      module = yield testIoc.module('modules/replace').resolve();
+      assert.deepEqual(module, { name: 'generatorOnce ok', count: 1 });
+
       done();
     })();
   });
 });
 
-describe('Ioc.set.function', function () {
+describe('moduleReplace.set.async', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
-      var testIoc = ioc.createIoc().setBasePath(__dirname);
-      testIoc.module('modules/replace').setFunction(function () {
-        return new Promise(function (resolve, reject) {
-          resolve('function ok');
+      var testIoc = ioc.createContainer().setBasePath(__dirname);
+      testIoc.module('modules/replace').setAsync(function () {
+        let count = 0;
+        return _asyncToGenerator(function* () {
+          count++;
+          return { name: 'async ok', count: count };
         });
-      });
+      }());
 
       let module = yield testIoc.module('modules/replace').resolve();
-      assert.equal(module, 'function ok');
+      assert.deepEqual(module, { name: 'async ok', count: 1 });
+
+      module = yield testIoc.module('modules/replace').resolve();
+      assert.deepEqual(module, { name: 'async ok', count: 2 });
+
       done();
     })();
+  });
+});
+
+describe('moduleReplace.set.asyncOnce', function () {
+  it('should return module', function (done) {
+    _asyncToGenerator(function* () {
+      var testIoc = ioc.createContainer().setBasePath(__dirname);
+      testIoc.module('modules/replace').setAsyncOnce(function () {
+        let count = 0;
+        return _asyncToGenerator(function* () {
+          count++;
+          return { name: 'asyncOnce ok', count: count };
+        });
+      }());
+
+      let module = yield testIoc.module('modules/replace').resolve();
+      assert.deepEqual(module, { name: 'asyncOnce ok', count: 1 });
+
+      module = yield testIoc.module('modules/replace').resolve();
+      assert.deepEqual(module, { name: 'asyncOnce ok', count: 1 });
+
+      done();
+    })();
+  });
+});
+
+describe('moduleReplace.set.async.promise', function () {
+  it('should return module', function (done) {
+    _asyncToGenerator(function* () {
+      var testIoc = ioc.createContainer().setBasePath(__dirname);
+      testIoc.module('modules/replace').setAsync(function () {
+        let count = 0;
+        return _asyncToGenerator(function* () {
+          count++;
+          return new Promise(function (resolve, reject) {
+            resolve({ name: 'promise ok', count: count });
+          });
+        });
+      }());
+
+      let module = yield testIoc.module('modules/replace').resolve();
+      assert.deepEqual(module, { name: 'promise ok', count: 1 });
+
+      module = yield testIoc.module('modules/replace').resolve();
+      assert.deepEqual(module, { name: 'promise ok', count: 2 });
+
+      done();
+    })();
+  });
+});
+
+describe('moduleReplace.set.asyncOnce.promise', function () {
+  it('should return module', function (done) {
+    _asyncToGenerator(function* () {
+      var testIoc = ioc.createContainer().setBasePath(__dirname);
+      testIoc.module('modules/replace').setAsyncOnce(function () {
+        let count = 0;
+        return _asyncToGenerator(function* () {
+          count++;
+          return new Promise(function (resolve, reject) {
+            resolve({ name: 'promiseOnce ok', count: count });
+          });
+        });
+      }());
+
+      let module = yield testIoc.module('modules/replace').resolve();
+      assert.deepEqual(module, { name: 'promiseOnce ok', count: 1 });
+
+      module = yield testIoc.module('modules/replace').resolve();
+      assert.deepEqual(module, { name: 'promiseOnce ok', count: 1 });
+
+      done();
+    })();
+  });
+});
+
+describe('module.error.reject', function () {
+  it('should return error', function (done) {
+
+    var testIoc = ioc.createContainer().setBasePath(__dirname);
+    testIoc.module('modules/reject').get().catch(error => {
+      assert.equal(error.message, 'error ok');
+      done();
+    });
+  });
+});
+
+describe('module.error.throw', function () {
+  it('should return error', function (done) {
+
+    var testIoc = ioc.createContainer().setBasePath(__dirname);
+
+    testIoc.module('modules/throw').get().catch(error => {
+      assert.equal(error.message, 'error ok');
+      done();
+    });
+  });
+});
+
+describe('module.error.throwGenerator', function () {
+  it('should return error', function (done) {
+
+    var testIoc = ioc.createContainer().setBasePath(__dirname);
+    testIoc.module('modules/throw-generator').get().catch(error => {
+      assert.equal(error.message, 'error ok');
+      done();
+    });
+  });
+});
+
+describe('module.error.throwAsync', function () {
+  it('should return error', function (done) {
+
+    var testIoc = ioc.createContainer().setBasePath(__dirname);
+    testIoc.module('modules/throw-async').get().catch(error => {
+      assert.equal(error.message, 'error ok');
+      done();
+    });
+  });
+});
+
+describe('module.error.throwDependency', function () {
+  it('should return error', function (done) {
+
+    var testIoc = ioc.createContainer().setBasePath(__dirname);
+    var module = testIoc.module('modules/throwDependency').set('modules/config').extend('throw', 'modules/throw').resolve().catch(error => {
+      assert.equal(error.message, 'error ok');
+      done();
+    });
+  });
+});
+
+describe('module.error.dependency.generatorOnce', function () {
+  it('should return error', function (done) {
+
+    var testIoc = ioc.createContainer().setBasePath(__dirname);
+    var module = testIoc.module('modules/config').extendGeneratorOnce('generator', function* () {
+      yield new Promise(resolve => {
+        setTimeout(resolve, 10);
+      });
+      throw new Error('error ok');
+    }).resolve().catch(error => {
+      assert.equal(error.message, 'error ok');
+      done();
+    });
+  });
+});
+
+describe('module.error.dependency.asyncOnce', function () {
+  it('should return error', function (done) {
+
+    var testIoc = ioc.createContainer().setBasePath(__dirname);
+    var module = testIoc.module('modules/config').extendAsyncOnce('generator', _asyncToGenerator(function* () {
+      yield new Promise(function (resolve) {
+        setTimeout(resolve, 10);
+      });
+      throw new Error('error ok');
+    })).resolve().catch(error => {
+      assert.equal(error.message, 'error ok');
+      done();
+    });
+  });
+});
+
+describe('module.error.dependency.asyncOnce.promise', function () {
+  it('should return error', function (done) {
+
+    var testIoc = ioc.createContainer().setBasePath(__dirname);
+    var module = testIoc.module('modules/config').extendAsyncOnce('generator', () => {
+      return new Promise(resolve => {
+        throw new Error('error ok');
+      });
+    }).resolve().catch(error => {
+      assert.equal(error.message, 'error ok');
+      done();
+    });
   });
 });
