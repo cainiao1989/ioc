@@ -1,5 +1,5 @@
-let ModuleResolver = require('./moduleResolver')
-let asyncToGenerator = require('./asyncToGenerator')
+//let asyncToGenerator = require('./asyncToGenerator')
+let co = require('co')
 
 class Module {
   static resolveExecutor(resolve, reject, executorFunction, dependencies) {
@@ -7,7 +7,8 @@ class Module {
 
     /* GeneratorFunction */
     if (executorFunction.constructor.name == 'GeneratorFunction') {
-      moduleFunction = asyncToGenerator( executorFunction )(dependencies)
+      //moduleFunction = asyncToGenerator(executorFunction)(dependencies)
+      moduleFunction = co.wrap(executorFunction)(dependencies)
       .catch((error) => {
         reject(error)
       })
