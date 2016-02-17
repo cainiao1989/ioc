@@ -34,13 +34,11 @@ ioc.createModule(module)
 ```
 
 ## Table of contents
-* [Examples]()
-  * [Module definition]()
-  * [Container usage]()
-  * [Resolving module]()
+* [Examples](#)
+  * [Module definition](#)
+  * [Container usage](#)
+  * [Resolving module](#)
 * [Api](#api)
-
-
 
 ## Api
 
