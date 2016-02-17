@@ -35,10 +35,158 @@ ioc.createModule(module)
 
 ## Table of contents
 * [Examples](#)
-  * [Module definition](#)
-  * [Container usage](#)
-  * [Resolving module](#)
+  * [Module definition - file based](#)
+    * [Promise](#)
+    * [ES6 generator function](#)
+    * [ES7 async function](#)
+  * [Module definition - on the fly](#)
+  * [Module resolve](#)
+    * [Singeton](#)
+    * [Factory](#)
+    * [ES7 async/await](#)
 * [Api](#api)
+
+
+## Module definition - file based
+#### Module definition - Promise executor
+`file` `hello-world.js`
+```javascript
+var ioc = require('ioc')
+
+ioc
+.createModule(module)
+.module(function (dep, resolve, reject) {
+  setTimeout(function() {
+    resolve('Hello world')
+  }, 1000)
+})
+```
+
+#### Module definition - ES6 generator function
+`file` `hello-world.js`
+```javascript
+var ioc = require('ioc')
+
+ioc
+.createModule(module)
+.module(function* (dep) {
+  yield new Promise(function (resolve, reject) {
+    setTimeout(resolve, 1000)
+  })
+
+  return 'Hello world'
+})
+```
+
+#### Module definition - ES7 async function
+`file` `hello-world.js`
+```javascript
+var ioc = require('ioc')
+
+ioc
+.createModule(module)
+.module(async function (dep) {
+  await new Promise(function (resolve, reject) {
+    setTimeout(resolve, 1000)
+  })
+
+  return 'Hello world'
+})
+```
+## Module definition - on the fly
+```javascript
+var ioc = require('ioc')
+
+var container = ioc.createContainer().setBasePath('/')
+/*
+we don't use
+  ioc.createModule(module)
+but
+  ioc.createModule()
+*/
+var onTheFlyModule = ioc
+  .createModule()
+  .module(function* (dep) {
+    yield new Promise(function (resolve, reject) {
+      setTimeout(resolve, 1000)
+    })
+
+    return 'Hello world'
+  })
+
+container.module('not/real/path').set(onTheFlyModule)
+```
+
+## Module resolve
+This will be our file structure
+
+`file` `core/config.js`
+```javascript
+ioc
+.createModule(module)
+.module(async function (dep) {
+  return 'config'
+})
+```
+
+`file` `core/factory.js`
+```javascript
+ioc
+.createModule(module)
+.setSingleton(false)
+.module(async function (dep) {
+  return 'factory'
+})
+```
+#### Singeton
+```javascript
+var ioc = require('kuul-ioc')
+ioc.get('nameForContainer').setBasePath(__dirname)
+
+var moduleResolver = ioc.get('nameForContainer').module('core/config')
+
+moduleResolver.get().then(function(configA) {
+  moduleResolver.get().then(function(configB) {
+    moduleResolver.resolve().then(function(configC) {
+      console.log( configA === configB )
+      /* returns true */
+      console.log( configA === configC )
+      /* returns false
+
+        resolve() will ignore module singeton boolean, it will always run module executor function and fetch results
+      */
+    })
+  })
+})
+
+```
+
+#### Factory
+```javascript
+var ioc = require('kuul-ioc')
+var co = require('co')
+
+ioc.get('nameForContainer').setBasePath(__dirname)
+var moduleResolver = ioc.get('nameForContainer').module('core/factory')
+co(function* () {
+  var configA = yield moduleResolver.get()
+  var configB = yield moduleResolver.get()
+  var configC = yield moduleResolver.get()
+  /* this would be same as above, because core/factory.js have
+    setSingleton(false)
+
+  var configA = yield moduleResolver.resolve()
+  var configB = yield moduleResolver.resolve()
+  var configC = yield moduleResolver.resolve()
+  */
+
+  console.log( configA === configB )
+  /* returns false */
+  console.log( configA === configC )
+  /* returns false */
+
+})
+```
 
 ## Api
 
