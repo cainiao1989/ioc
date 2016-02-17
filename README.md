@@ -1,7 +1,7 @@
-# Kuul-ioc - Node.js and browser module for asynchronous promise based inversion of control
-[![npm package](https://nodei.co/npm/kuul-ioc.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/kuul-ioc/)
+# Kuulioc  Node.js and browser module for asynchronous promise based inversion of control
+[![npm package](https://nodei.co/npm/kuulioc.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/kuulioc/)
 
-[![Build Status](https://travis-ci.org/kuul/ioc.svg?branch=master)](https://travis-ci.org/kuul/ioc)
+[![Build Status](https://travisci.org/kuul/ioc.svg?branch=master)](https://travisci.org/kuul/ioc)
 
 ## Motivation
 >  As Node.js developer I really missed some good asynchronous inversion of controll module for Node.js, there are some but I was not fully satisfied with them. Also using native Node.js require is not always best idea, definetly not for bigger project. Good IoC is foundation stone for every Javascript application, so here you have one :)
@@ -13,12 +13,12 @@
 * You can extend ( add or replace ) dependencies when you resolving module
 * Simple mocking modules for tests and replacement
 * It's perfect to use if you like promises, ES6 generators or ES7 async / await features
-* You don't have to worry about `module.export` or `export` keyword anymore, kuul-ioc will handle that for you
+* You don't have to worry about `module.export` or `export` keyword anymore, kuulioc will handle that for you
 * Small and very powerfull library
 
 ## Simple usage
 ```javascript
-let ioc = require('kuul-ioc')
+let ioc = require('kuulioc')
 
 ioc.createModule(module)
   .dependency('database', 'core/database')
@@ -44,36 +44,36 @@ ioc.createModule(module)
 
 ## Api
 
-* [Ioc](#class-ioc)
-  * [get(name)](#ioc-get-name-)
-  * [createContainer()](#ioc-createcontainer-name-)
-  * [createModule([module])](#ioc-createmodule-module-)
-* [Container](#class-container)
-  * [setBasePath(basePath)](#container-setbasepath-basepath-)
-  * [module(modulePath)](#container-module-modulepath-)
-* [Module](#class-module)
-  * [setSingleton(boolean)](#module-setsingleton-boolean-)
-  * [dependency(name, mixed)](#module-dependency-name-mixed-)
-  * [dependencyValue(name, mixed)](#module-dependencyvalue-name-mixed-)
-  * [dependencyFunction(name, mixed)](#module-dependencyfunction-name-mixed-)
-  * [dependencyFunctionOnce(name, mixed)](#module-dependencyfunctiononce-name-mixed-)
-  * [module(mixed)](#module-module-mixed-)
-* [ModuleResolver](#class-moduleresolver)
-  * [get()](#moduleresolver-get-)
-  * [resolve()](#moduleresolver-resolve-)
-  * [extend(name, mixed)](#moduleresolver-extend-name-mixed-)
-  * [extendValue(name, mixed)](#moduleresolver-extendvalue-name-mixed-)
-  * [extendFunction(name, mixed)](#moduleresolver-extendfunction-name-mixed-)
-  * [extendFunctionOnce(name, mixed)](#moduleresolver-extendfunctiononce-name-mixed-)
-  * [set(mixed)](#moduleresolver-set-mixed-)
-  * [setValue(mixed)](#moduleresolver-setvalue-mixed-)
-  * [setFunction(mixed)](#moduleresolver-setfunction-mixed-)
-  * [setFunctionOnce(mixed)](#moduleresolver-setfunctiononce-mixed-)
+* [Ioc](#classioc)
+  * [get(name)](#iocgetname)
+  * [createContainer()](#ioccreatecontainername)
+  * [createModule([module])](#ioccreatemodulemodule)
+* [Container](#classcontainer)
+  * [setBasePath(basePath)](#containersetbasepathbasepath)
+  * [module(modulePath)](#containermodulemodulepath)
+* [Module](#classmodule)
+  * [setSingleton(boolean)](#modulesetsingletonboolean)
+  * [dependency(name, mixed)](#moduledependencynamemixed)
+  * [dependencyValue(name, mixed)](#moduledependencyvaluenamemixed)
+  * [dependencyFunction(name, mixed)](#moduledependencyfunctionnamemixed)
+  * [dependencyFunctionOnce(name, mixed)](#moduledependencyfunctiononcenamemixed)
+  * [module(mixed)](#modulemodulemixed)
+* [ModuleResolver](#classmoduleresolver)
+  * [get()](#moduleresolverget)
+  * [resolve()](#moduleresolverresolve)
+  * [extend(name, mixed)](#moduleresolverextendnamemixed)
+  * [extendValue(name, mixed)](#moduleresolverextendvaluenamemixed)
+  * [extendFunction(name, mixed)](#moduleresolverextendfunctionnamemixed)
+  * [extendFunctionOnce(name, mixed)](#moduleresolverextendfunctiononcenamemixed)
+  * [set(mixed)](#moduleresolversetmixed)
+  * [setValue(mixed)](#moduleresolversetvaluemixed)
+  * [setFunction(mixed)](#moduleresolversetfunctionmixed)
+  * [setFunctionOnce(mixed)](#moduleresolversetfunctiononcemixed)
 
 ## Class: Ioc
 
 #### ioc.get(`name`)
-  * `name` `String` - Name of container
+  * `name` `String`  Name of container
 
 `return` `Container` instance
 > Create new or return existing instance of `Container`
@@ -84,24 +84,24 @@ ioc.createModule(module)
 > Create new instance of `Container`
 
 #### ioc.createModule([`module`])
-  * `module` - Node.js `module` keyword, used to `module.exports` or `exports` Objects from native Node.js module system
+  * `module`  Node.js `module` keyword, used to `module.exports` or `exports` Objects from native Node.js module system
 
-`return` - `Module` instance
+`return`  `Module` instance
 
 > Create new instance of `Module`
 
-Parameter `module` is optional because you can create `Module` instance on fly so `kuul-ioc` will not internally call `require` function to get `Module` instance. So basically you don't provide any parameter when creating `Module` instance on fly.
+Parameter `module` is optional because you can create `Module` instance on fly so `kuulioc` will not internally call `require` function to get `Module` instance. So basically you don't provide any parameter when creating `Module` instance on fly.
 
 ## Class: Container
 
 #### container.setBasePath(`basePath`)
-  * `basePath` `String` - Base path of container
+  * `basePath` `String`  Base path of container
 
 `return` `Container` instance
 > Set base path of container
 
 #### container.module(`modulePath`)
-  * `modulePath` `String` - Path to requested module
+  * `modulePath` `String`  Path to requested module
 
 `return` `ModuleResolver` instance
 > Create `ModuleResolver` instance for module specified by `modulePath`
@@ -115,28 +115,28 @@ Parameter `module` is optional because you can create `Module` instance on fly s
 > It specify if module should be resolved as singleton or new instance every time you resolve it
 
 #### module.dependency(`name`, `mixed`)
-* `name` `String` - Name of dependency when it will be resolved and put in module function
+* `name` `String`  Name of dependency when it will be resolved and put in module function
 * `mixed` `String` | `ModuleResolver` | `Module`
 
 `return` `Module` instance
 > Add dependency to your module
 
 #### module.dependencyValue(`name`, `mixed`)
-* `name` `String` - Name of dependency when it will be resolved and put in module function
-* `mixed` `Mixed` - Anything
+* `name` `String`  Name of dependency when it will be resolved and put in module function
+* `mixed` `Mixed`  Anything
 
 `return` `Module` instance
 > Add dependency to your module
 
 #### module.dependencyFunction(`name`, `mixed`)
-* `name` `String` - Name of dependency when it will be resolved and put in module function
+* `name` `String`  Name of dependency when it will be resolved and put in module function
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `Module` instance
 > Add dependency to your module
 
 #### module.dependencyFunctionOnce(`name`, `mixed`)
-* `name` `String` - Name of dependency when it will be resolved and put in module function
+* `name` `String`  Name of dependency when it will be resolved and put in module function
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `Module` instance
@@ -158,28 +158,28 @@ Parameter `module` is optional because you can create `Module` instance on fly s
 > Asynchronously resolve module, it does not care if module is singleton, it will always return a new instance. Bascially it always run your module function and fetch the result
 
 #### moduleResolver.extend(`name`, `mixed`)
-* `name` `String` - Name of dependency that will be added or replaced
+* `name` `String`  Name of dependency that will be added or replaced
 * `mixed` `String` | `ModuleResolver` | `Module`
 
 `return` `ModuleResolver` instance
 > Add or replace dependency to your module
 
 #### moduleResolver.extendValue(`name`, `mixed`)
-* `name` `String` - Name of dependency that will be added or replaced
-* `mixed` `Mixed` - Anything
+* `name` `String`  Name of dependency that will be added or replaced
+* `mixed` `Mixed`  Anything
 
 `return` `ModuleResolver` instance
 > Add or replace dependency to your module
 
 #### moduleResolver.extendFunction(`name`, `mixed`)
-* `name` `String` - Name of dependency that will be added or replaced
+* `name` `String`  Name of dependency that will be added or replaced
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `ModuleResolver` instance
 > Add or replace dependency to your module
 
 #### moduleResolver.extendFunctionOnce(`name`, `mixed`)
-* `name` `String` - Name of dependency that will be added or replaced
+* `name` `String`  Name of dependency that will be added or replaced
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `ModuleResolver` instance
@@ -192,7 +192,7 @@ Parameter `module` is optional because you can create `Module` instance on fly s
 > It replace your module
 
 #### moduleResolver.setValue(`mixed`)
-* `mixed` `Mixed` - Anything
+* `mixed` `Mixed`  Anything
 
 `return` `ModuleResolver` instance
 > It replace your module
