@@ -1,7 +1,7 @@
-# Kuulioc  Node.js and browser module for asynchronous promise based inversion of control
-[![npm package](https://nodei.co/npm/kuulioc.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/kuulioc/)
+# Kuul-ioc  Node.js and browser module for asynchronous promise based inversion of control
+[![npm package](https://nodei.co/npm/kuul-ioc.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/kuulioc/)
 
-[![Build Status](https://travisci.org/kuul/ioc.svg?branch=master)](https://travisci.org/kuul/ioc)
+[![Build Status](https://travis-ci.org/kuul-node-stuff/ioc.svg?branch=master)](https://travis-ci.org/kuul-node-stuff/ioc)
 
 ## Motivation
 >  As Node.js developer I really missed some good asynchronous inversion of controll module for Node.js, there are some but I was not fully satisfied with them. Also using native Node.js require is not always best idea, definetly not for bigger project. Good IoC is foundation stone for every Javascript application, so here you have one :)
@@ -13,12 +13,12 @@
 * You can extend ( add or replace ) dependencies when you resolving module
 * Simple mocking modules for tests and replacement
 * It's perfect to use if you like promises, ES6 generators or ES7 async / await features
-* You don't have to worry about `module.export` or `export` keyword anymore, kuulioc will handle that for you
+* You don't have to worry about `module.export` or `export` keyword anymore, `kuul-ioc` will handle that for you
 * Small and very powerfull library
 
 ## Simple usage
 ```javascript
-let ioc = require('kuulioc')
+let ioc = require('kuul-ioc')
 
 ioc.createModule(module)
   .dependency('database', 'core/database')
@@ -84,9 +84,9 @@ ioc.createModule(module)
 > Create new instance of `Container`
 
 #### ioc.createModule([`module`])
-  * `module`  Node.js `module` keyword, used to `module.exports` or `exports` Objects from native Node.js module system
+  * `module` Node.js `module` keyword, used to `module.exports` or `exports` Objects from native Node.js module system
 
-`return`  `Module` instance
+`return` `Module` instance
 
 > Create new instance of `Module`
 
@@ -151,11 +151,11 @@ Parameter `module` is optional because you can create `Module` instance on fly s
 ## Class: ModuleResolver
 #### moduleResolver.get()
 `return` `Promise` instance
-> Asynchronously tesolve module, if module is singleton it will be resolved only first time, next time you call get() on singleton module it will return the same result as first time
+> Asynchronously resolve module, if module is singleton it will be resolved only first time, next time you call get() on singleton module it will return the same result as first time
 
 #### moduleResolver.resolve()
 `return` `Promise` instance
-> Asynchronously resolve module, it does not care if module is singleton, it will always return a new instance. Bascially it always run your module function and fetch the result
+> Asynchronously resolve module, it does not care if module is singleton, it will always return a new instance. Basically it always run your module function and fetch the result
 
 #### moduleResolver.extend(`name`, `mixed`)
 * `name` `String`  Name of dependency that will be added or replaced
