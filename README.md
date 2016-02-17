@@ -45,30 +45,30 @@ ioc.createModule(module)
 ## Api
 
 * [Ioc](#class-ioc)
-  * [get(name)](#iocgetname)
-  * [createContainer()](#iocgetname)
-  * [createModule([module])](#ioccreatemodule)
-* [Container](#container)
-  * [setBasePath(basePath)](#containersetbasepath)
-  * [module(modulePath)](#containermodule)
-* [Module](#module)
-  * [setSingleton(boolean)](#)
-  * [dependency(name, mixed)](#)
-  * [dependencyValue(name, mixed)](#)
-  * [dependencyFunction(name, function)](#)
-  * [dependencyFunctionOnce(name, function)](#)
-  * [module(mixed)](#)
-* [ModuleResolver](#)
-  * [get()](#)
-  * [resolve()](#)
-  * [extend(name, mixed)](#)
-  * [extendValue(name, mixed)](#)
-  * [extendFunction(name, function)](#)
-  * [extendFunctionOnce(name, function)](#)
-  * [set(mixed)](#)
-  * [setValue(value)](#)
-  * [setFunction(function)](#)
-  * [setFunctionOnce(function)](#)
+  * [get(name)](#ioc-get-name-)
+  * [createContainer()](#ioc-createcontainer-name-)
+  * [createModule([module])](#ioc-createmodule-module-)
+* [Container](#class-container)
+  * [setBasePath(basePath)](#container-setbasepath-basepath-)
+  * [module(modulePath)](#container-module-modulepath-)
+* [Module](#class-module)
+  * [setSingleton(boolean)](#module-setsingleton-boolean-)
+  * [dependency(name, mixed)](#module-dependency-name-mixed-)
+  * [dependencyValue(name, mixed)](#module-dependencyvalue-name-mixed-)
+  * [dependencyFunction(name, mixed)](#module-dependencyfunction-name-mixed-)
+  * [dependencyFunctionOnce(name, mixed)](#module-dependencyfunctiononce-name-mixed-)
+  * [module(mixed)](#module-module-mixed-)
+* [ModuleResolver](#class-moduleresolver)
+  * [get()](#moduleresolver-get-)
+  * [resolve()](#moduleresolver-resolve-)
+  * [extend(name, mixed)](#moduleresolver-extend-name-mixed-)
+  * [extendValue(name, mixed)](#moduleresolver-extendvalue-name-mixed-)
+  * [extendFunction(name, mixed)](#moduleresolver-extendfunction-name-mixed-)
+  * [extendFunctionOnce(name, mixed)](#moduleresolver-extendfunctiononce-name-mixed-)
+  * [set(mixed)](#moduleresolver-set-mixed-)
+  * [setValue(mixed)](#moduleresolver-setvalue-mixed-)
+  * [setFunction(mixed)](#moduleresolver-setfunction-mixed-)
+  * [setFunctionOnce(mixed)](#moduleresolver-setfunctiononce-mixed-)
 
 ## Class: Ioc
 
@@ -78,11 +78,9 @@ ioc.createModule(module)
 `return` `Container` instance
 > Create new or return existing instance of `Container`
 
-#### ioc.createContainer(`name`)
-  * `name` `String` - Name of container
+#### ioc.createContainer()
 
 `return` `Container` instance
-
 > Create new instance of `Container`
 
 #### ioc.createModule([`module`])
@@ -110,41 +108,41 @@ Parameter `module` is optional because you can create `Module` instance on fly s
 
 ## Class: Module
 
-#### module.setSingleton(boolean)
+#### module.setSingleton(`boolean`)
 * `boolean` `Boolean`
 
 `return` `Module` instance
 > It specify if module should be resolved as singleton or new instance every time you resolve it
 
-#### module.dependency(name, mixed)
+#### module.dependency(`name`, `mixed`)
 * `name` `String` - Name of dependency when it will be resolved and put in module function
 * `mixed` `String` | `ModuleResolver` | `Module`
 
 `return` `Module` instance
 > Add dependency to your module
 
-#### module.dependencyValue(name, mixed)
+#### module.dependencyValue(`name`, `mixed`)
 * `name` `String` - Name of dependency when it will be resolved and put in module function
 * `mixed` `Mixed` - Anything
 
 `return` `Module` instance
 > Add dependency to your module
 
-#### module.dependencyFunction(name, mixed)
+#### module.dependencyFunction(`name`, `mixed`)
 * `name` `String` - Name of dependency when it will be resolved and put in module function
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `Module` instance
 > Add dependency to your module
 
-#### module.dependencyFunctionOnce(name, mixed)
+#### module.dependencyFunctionOnce(`name`, `mixed`)
 * `name` `String` - Name of dependency when it will be resolved and put in module function
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `Module` instance
 > Add dependency to your module
 
-#### module.module(mixed)
+#### module.module(`mixed`)
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `Module` instance
@@ -152,12 +150,61 @@ Parameter `module` is optional because you can create `Module` instance on fly s
 
 ## Class: ModuleResolver
 #### moduleResolver.get()
+`return` `Promise` instance
+> Asynchronously tesolve module, if module is singleton it will be resolved only first time, next time you call get() on singleton module it will return the same result as first time
+
 #### moduleResolver.resolve()
-#### moduleResolver.extend(name, mixed)
-#### moduleResolver.extendValue(name, mixed)
-#### moduleResolver.extendFunction(name, function)
-#### moduleResolver.extendFunctionOnce(name, function)
-#### moduleResolver.set(mixed)
-#### moduleResolver.setValue(value)
-#### moduleResolver.setFunction(function)
-#### moduleResolver.setFunctionOnce(function)
+`return` `Promise` instance
+> Asynchronously resolve module, it does not care if module is singleton, it will always return a new instance. Bascially it always run your module function and fetch the result
+
+#### moduleResolver.extend(`name`, `mixed`)
+* `name` `String` - Name of dependency that will be added or replaced
+* `mixed` `String` | `ModuleResolver` | `Module`
+
+`return` `ModuleResolver` instance
+> Add or replace dependency to your module
+
+#### moduleResolver.extendValue(`name`, `mixed`)
+* `name` `String` - Name of dependency that will be added or replaced
+* `mixed` `Mixed` - Anything
+
+`return` `ModuleResolver` instance
+> Add or replace dependency to your module
+
+#### moduleResolver.extendFunction(`name`, `mixed`)
+* `name` `String` - Name of dependency that will be added or replaced
+* `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
+
+`return` `ModuleResolver` instance
+> Add or replace dependency to your module
+
+#### moduleResolver.extendFunctionOnce(`name`, `mixed`)
+* `name` `String` - Name of dependency that will be added or replaced
+* `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
+
+`return` `ModuleResolver` instance
+> Add or replace dependency to your module
+
+#### moduleResolver.set(`mixed`)
+* `mixed` `String` | `ModuleResolver` | `Module`
+
+`return` `ModuleResolver` instance
+> It replace your module
+
+#### moduleResolver.setValue(`mixed`)
+* `mixed` `Mixed` - Anything
+
+`return` `ModuleResolver` instance
+> It replace your module
+
+#### moduleResolver.setFunction(`mixed`)
+* `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
+
+`return` `ModuleResolver` instance
+> It replace your module
+
+#### moduleResolver.setFunctionOnce(`mixed`)
+* `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
+
+`return` `ModuleResolver` instance
+> It replace your module
