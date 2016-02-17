@@ -3,7 +3,7 @@ ioc.createModule(module)
   .dependency('module2', '../modules/config')
   .dependency('moduleResolver', ioc.get('test').module('modules/config') )
   .dependencyValue('value', 'value ok')
-  .dependencyGenerator(
+  .dependencyFunction(
     'generator',
     (() => {
       let count = 0
@@ -13,7 +13,7 @@ ioc.createModule(module)
       }
     })()
   )
-  .dependencyGeneratorOnce(
+  .dependencyFunctionOnce(
     'generatorOnce',
     (() => {
       let count = 0
@@ -23,7 +23,7 @@ ioc.createModule(module)
       }
     })()
   )
-  .dependencyAsync(
+  .dependencyFunction(
     'async',
     (() => {
       let count = 0
@@ -33,7 +33,7 @@ ioc.createModule(module)
       }
     })()
   )
-  .dependencyAsyncOnce(
+  .dependencyFunctionOnce(
     'asyncOnce',
     (() => {
       let count = 0
@@ -43,7 +43,7 @@ ioc.createModule(module)
       }
     })()
   )
-  .dependencyAsync(
+  .dependencyFunction(
     'promise',
     (() => {
       let count = 0
@@ -55,7 +55,7 @@ ioc.createModule(module)
       }
     })()
   )
-  .dependencyAsyncOnce(
+  .dependencyFunctionOnce(
     'promiseOnce',
     (() => {
       let count = 0

@@ -1,6 +1,5 @@
 let path = require('path')
 let Module = require('./module')
-let asyncToGenerator = require('./asyncToGenerator')
 
 class ModuleResolver {
   constructor (options) {
@@ -20,7 +19,7 @@ class ModuleResolver {
       return this.getModuleResolverReplacement()
     }
   }
-  
+
   checkForReplacement () {
     this.isReplacement = false
     let moduleFullPath = this.getModuleNormalizePath()
@@ -79,23 +78,13 @@ class ModuleResolver {
     return this
   }
 
-  extendGenerator (name, value) {
-    this.extends[name] = Module.createDependencyGenerator(name, value)
+  extendFunction (name, value) {
+    this.extends[name] = Module.createDependencyFunction(name, value)
     return this
   }
 
-  extendGeneratorOnce (name, value) {
-    this.extends[name] = Module.createDependencyGeneratorOnce(name, value)
-    return this
-  }
-
-  extendAsync (name, value) {
-    this.extends[name] = Module.createDependencyAsync(name, value)
-    return this
-  }
-
-  extendAsyncOnce (name, value) {
-    this.extends[name] = Module.createDependencyAsyncOnce(name, value)
+  extendFunctionOnce (name, value) {
+    this.extends[name] = Module.createDependencyFunctionOnce(name, value)
     return this
   }
 
@@ -121,30 +110,16 @@ class ModuleResolver {
     return this
   }
 
-  setGenerator (value) {
+  setFunction (value) {
     let name = this.getModuleNormalizePath()
-    this.container.replacements[name] = Module.createDependencyGenerator(name, value)
+    this.container.replacements[name] = Module.createDependencyFunction(name, value)
     this.checkForReplacement()
     return this
   }
 
-  setGeneratorOnce (value) {
+  setFunctionOnce (value) {
     let name = this.getModuleNormalizePath()
-    this.container.replacements[name] = Module.createDependencyGeneratorOnce(name, value)
-    this.checkForReplacement()
-    return this
-  }
-
-  setAsync (value) {
-    let name = this.getModuleNormalizePath()
-    this.container.replacements[name] = Module.createDependencyAsync(name, value)
-    this.checkForReplacement()
-    return this
-  }
-
-  setAsyncOnce (value) {
-    let name = this.getModuleNormalizePath()
-    this.container.replacements[name] = Module.createDependencyAsyncOnce(name, value)
+    this.container.replacements[name] = Module.createDependencyFunctionOnce(name, value)
     this.checkForReplacement()
     return this
   }
@@ -162,42 +137,8 @@ class ModuleResolver {
       }
 
       /* dependencies was resolved we can launch moduleExecutor */
-      let moduleFunction
+      Module.resolveExecutor(resolve, reject, self.module.moduleExecutor, dependencies)
 
-      /* GeneratorFunction */
-      if (self.module.moduleExecutor.constructor.name == 'GeneratorFunction') {
-        moduleFunction = asyncToGenerator( self.module.moduleExecutor )(dependencies, resolve, reject)
-        .catch((error) => {
-          reject(error)
-        })
-
-      /* @TODO ES7 async function detection, wait till it will be standard
-         function or async function, babel regenerator return function */
-      } else {
-        moduleFunction = (function () {
-          let result = undefined
-          try {
-            result = self.module.moduleExecutor(dependencies, resolve, reject)
-          } catch (error) {
-            /* unhandled moduleFunction error
-               This happens only when moduleExecutor is only normal function ex. function() {}
-            */
-            reject(error)
-          }
-
-          if (!(result instanceof Object) || !(result.catch instanceof Function)) {
-            /* It's normal function, let's do dirty hack it so no unhandledRejection will appear */
-            result = {
-              catch: function() {}
-            }
-          }
-          return result
-        })().catch(reject)
-      }
-
-      if (moduleFunction && moduleFunction.then instanceof Function) {
-        moduleFunction.then(resolve)
-      }
     })
   }
 
@@ -216,23 +157,10 @@ class ModuleResolver {
       case 'value':
         dependencyValue = dependency.value
         break
-      case 'generator':
+      case 'function':
         dependencyValue = await dependency.function()
         break
-      case 'generatorOnce':
-        if (!dependency.resolved) {
-          dependencyValue = await dependency.function()
-          delete dependency.function
-          dependency.resolved = true
-          dependency.value = dependencyValue
-        } else {
-          dependencyValue = dependency.value
-        }
-        break
-      case 'async':
-        dependencyValue = await dependency.function()
-        break
-      case 'asyncOnce':
+      case 'functionOnce':
         if (!dependency.resolved) {
           dependencyValue = await dependency.function()
           delete dependency.function

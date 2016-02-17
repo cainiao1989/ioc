@@ -34,42 +34,41 @@ ioc.createModule(module)
 ```
 
 ## Table of contents
-- [Api](#Api)
+* [Examples]()
+  * [Module definition]()
+  * [Container usage]()
+  * [Resolving module]()
+* [Api](#api)
 
 
 
-##  Api
-* [Ioc](#Class: Ioc)
-  * get(name)
-  * createContainer()
-  * createModule([module])
-* Container
-  * setBasePath(basePath)
-  * module(modulePath)
-* Module
-  * setSingleton(boolean)
-  * dependency(name, mixed)
-  * dependencyValue(name, mixed)
-  * dependencyGenerator(name, function)
-  * dependencyGeneratorOnce(name, function)
-  * dependencyAsync(name, function)
-  * dependencyAsyncOnce(name, function)
-  * module(function)
-* ModuleResolver
-  * get()
-  * resolve()
-  * extend(name, mixed)
-  * extendValue(name, mixed)
-  * extendGenerator(name, function)
-  * extendGeneratorOnce(name, function)
-  * extendAsync(name, function)
-  * extendAsyncOnce(name, function)
-  * set(mixed)
-  * setValue(value)
-  * setGenerator(function)
-  * setGeneratorOnce(function)
-  * setAsync(function)
-  * setAsyncOnce(function)
+## Api
+
+* [Ioc](#class-ioc)
+  * [get(name)](#iocgetname)
+  * [createContainer()](#iocgetname)
+  * [createModule([module])](#ioccreatemodule)
+* [Container](#container)
+  * [setBasePath(basePath)](#containersetbasepath)
+  * [module(modulePath)](#containermodule)
+* [Module](#module)
+  * [setSingleton(boolean)](#)
+  * [dependency(name, mixed)](#)
+  * [dependencyValue(name, mixed)](#)
+  * [dependencyFunction(name, function)](#)
+  * [dependencyFunctionOnce(name, function)](#)
+  * [module(mixed)](#)
+* [ModuleResolver](#)
+  * [get()](#)
+  * [resolve()](#)
+  * [extend(name, mixed)](#)
+  * [extendValue(name, mixed)](#)
+  * [extendFunction(name, function)](#)
+  * [extendFunctionOnce(name, function)](#)
+  * [set(mixed)](#)
+  * [setValue(value)](#)
+  * [setFunction(function)](#)
+  * [setFunctionOnce(function)](#)
 
 ## Class: Ioc
 
@@ -110,28 +109,55 @@ Parameter `module` is optional because you can create `Module` instance on fly s
 > Create `ModuleResolver` instance for module specified by `modulePath`
 
 ## Class: Module
+
 #### module.setSingleton(boolean)
+* `boolean` `Boolean`
+
+`return` `Module` instance
+> It specify if module should be resolved as singleton or new instance every time you resolve it
+
 #### module.dependency(name, mixed)
+* `name` `String` - Name of dependency when it will be resolved and put in module function
+* `mixed` `String` | `ModuleResolver` | `Module`
+
+`return` `Module` instance
+> Add dependency to your module
+
 #### module.dependencyValue(name, mixed)
-#### module.dependencyGenerator(name, function)
-#### module.dependencyGeneratorOnce(name, function)
-#### module.dependencyAsync(name, function)
-#### module.dependencyAsyncOnce(name, function)
-#### module.module(function)
+* `name` `String` - Name of dependency when it will be resolved and put in module function
+* `mixed` `Mixed` - Anything
+
+`return` `Module` instance
+> Add dependency to your module
+
+#### module.dependencyFunction(name, mixed)
+* `name` `String` - Name of dependency when it will be resolved and put in module function
+* `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
+
+`return` `Module` instance
+> Add dependency to your module
+
+#### module.dependencyFunctionOnce(name, mixed)
+* `name` `String` - Name of dependency when it will be resolved and put in module function
+* `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
+
+`return` `Module` instance
+> Add dependency to your module
+
+#### module.module(mixed)
+* `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
+
+`return` `Module` instance
+> Function that handle logic of module or in other words function that return content of module
 
 ## Class: ModuleResolver
-
 #### moduleResolver.get()
 #### moduleResolver.resolve()
 #### moduleResolver.extend(name, mixed)
 #### moduleResolver.extendValue(name, mixed)
-#### moduleResolver.extendGenerator(name, function)
-#### moduleResolver.extendGeneratorOnce(name, function)
-#### moduleResolver.extendAsync(name, function)
-#### moduleResolver.extendAsyncOnce(name, function)
+#### moduleResolver.extendFunction(name, function)
+#### moduleResolver.extendFunctionOnce(name, function)
 #### moduleResolver.set(mixed)
 #### moduleResolver.setValue(value)
-#### moduleResolver.setGenerator(function)
-#### moduleResolver.setGeneratorOnce(function)
-#### moduleResolver.setAsync(function)
-#### moduleResolver.setAsyncOnce(function)
+#### moduleResolver.setFunction(function)
+#### moduleResolver.setFunctionOnce(function)

@@ -118,31 +118,31 @@ describe('module.dependency.once', function () {
 describe('moduleResolver.extend', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
-      let moduleResolver = ioc.get('test').module('modules/dependency').extend('module', 'modules/database').extend('moduleResolver', ioc.get('test').module('modules/database')).extendValue('value', 'extendValue ok').extendGenerator('generator', function () {
+      let moduleResolver = ioc.get('test').module('modules/dependency').extend('module', 'modules/database').extend('moduleResolver', ioc.get('test').module('modules/database')).extendValue('value', 'extendValue ok').extendFunction('generator', function () {
         let count = 0;
         return function* () {
           count++;
           return { name: 'extendGenerator ok', count: count };
         };
-      }()).extendGeneratorOnce('generatorOnce', function () {
+      }()).extendFunctionOnce('generatorOnce', function () {
         let count = 0;
         return function* () {
           count++;
           return { name: 'extendGeneratorOnce ok', count: count };
         };
-      }()).extendAsync('async', function () {
+      }()).extendFunction('async', function () {
         let count = 0;
         return _asyncToGenerator(function* () {
           count++;
           return { name: 'extendAsync ok', count: count };
         });
-      }()).extendAsyncOnce('asyncOnce', function () {
+      }()).extendFunctionOnce('asyncOnce', function () {
         let count = 0;
         return _asyncToGenerator(function* () {
           count++;
           return { name: 'extendAsyncOnce ok', count: count };
         });
-      }()).extendAsync('promise', function () {
+      }()).extendFunction('promise', function () {
         let count = 0;
         return function () {
           count++;
@@ -150,7 +150,7 @@ describe('moduleResolver.extend', function () {
             resolve({ name: 'extendPromise ok', count: count });
           });
         };
-      }()).extendAsyncOnce('promiseOnce', function () {
+      }()).extendFunctionOnce('promiseOnce', function () {
         let count = 0;
         return function () {
           count++;
@@ -247,11 +247,11 @@ describe('moduleReplace.set.value', function () {
   });
 });
 
-describe('moduleReplace.set.generator', function () {
+describe('moduleReplace.set.function.generator', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
       var testIoc = ioc.createContainer().setBasePath(__dirname);
-      testIoc.module('modules/replace').setGenerator(function () {
+      testIoc.module('modules/replace').setFunction(function () {
         let count = 0;
         return function* () {
           count++;
@@ -270,11 +270,11 @@ describe('moduleReplace.set.generator', function () {
   });
 });
 
-describe('moduleReplace.set.generatorOnce', function () {
+describe('moduleReplace.set.functionOnce.generator', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
       var testIoc = ioc.createContainer().setBasePath(__dirname);
-      testIoc.module('modules/replace').setGeneratorOnce(function () {
+      testIoc.module('modules/replace').setFunctionOnce(function () {
         let count = 0;
         return function* () {
           count++;
@@ -293,11 +293,11 @@ describe('moduleReplace.set.generatorOnce', function () {
   });
 });
 
-describe('moduleReplace.set.async', function () {
+describe('moduleReplace.set.function.async', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
       var testIoc = ioc.createContainer().setBasePath(__dirname);
-      testIoc.module('modules/replace').setAsync(function () {
+      testIoc.module('modules/replace').setFunction(function () {
         let count = 0;
         return _asyncToGenerator(function* () {
           count++;
@@ -316,11 +316,11 @@ describe('moduleReplace.set.async', function () {
   });
 });
 
-describe('moduleReplace.set.asyncOnce', function () {
+describe('moduleReplace.set.functionOnce.async', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
       var testIoc = ioc.createContainer().setBasePath(__dirname);
-      testIoc.module('modules/replace').setAsyncOnce(function () {
+      testIoc.module('modules/replace').setFunctionOnce(function () {
         let count = 0;
         return _asyncToGenerator(function* () {
           count++;
@@ -339,11 +339,11 @@ describe('moduleReplace.set.asyncOnce', function () {
   });
 });
 
-describe('moduleReplace.set.async.promise', function () {
+describe('moduleReplace.set.function.promise', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
       var testIoc = ioc.createContainer().setBasePath(__dirname);
-      testIoc.module('modules/replace').setAsync(function () {
+      testIoc.module('modules/replace').setFunction(function () {
         let count = 0;
         return _asyncToGenerator(function* () {
           count++;
@@ -364,11 +364,11 @@ describe('moduleReplace.set.async.promise', function () {
   });
 });
 
-describe('moduleReplace.set.asyncOnce.promise', function () {
+describe('moduleReplace.set.functionOnce.promise', function () {
   it('should return module', function (done) {
     _asyncToGenerator(function* () {
       var testIoc = ioc.createContainer().setBasePath(__dirname);
-      testIoc.module('modules/replace').setAsyncOnce(function () {
+      testIoc.module('modules/replace').setFunctionOnce(function () {
         let count = 0;
         return _asyncToGenerator(function* () {
           count++;
@@ -449,7 +449,7 @@ describe('module.error.dependency.generatorOnce', function () {
   it('should return error', function (done) {
 
     var testIoc = ioc.createContainer().setBasePath(__dirname);
-    var module = testIoc.module('modules/config').extendGeneratorOnce('generator', function* () {
+    var module = testIoc.module('modules/config').extendFunctionOnce('generator', function* () {
       yield new Promise(resolve => {
         setTimeout(resolve, 10);
       });
@@ -465,7 +465,7 @@ describe('module.error.dependency.asyncOnce', function () {
   it('should return error', function (done) {
 
     var testIoc = ioc.createContainer().setBasePath(__dirname);
-    var module = testIoc.module('modules/config').extendAsyncOnce('generator', _asyncToGenerator(function* () {
+    var module = testIoc.module('modules/config').extendFunctionOnce('generator', _asyncToGenerator(function* () {
       yield new Promise(function (resolve) {
         setTimeout(resolve, 10);
       });
@@ -481,7 +481,7 @@ describe('module.error.dependency.asyncOnce.promise', function () {
   it('should return error', function (done) {
 
     var testIoc = ioc.createContainer().setBasePath(__dirname);
-    var module = testIoc.module('modules/config').extendAsyncOnce('generator', () => {
+    var module = testIoc.module('modules/config').extendFunctionOnce('generator', () => {
       return new Promise(resolve => {
         throw new Error('error ok');
       });
