@@ -16,14 +16,18 @@
 * You don't have to worry about `module.export` or `export` keyword anymore, `kuul-ioc` will handle that for you
 * Small and very powerfull library
 
-## Simple usage
+## Simple usage example
+> Module definition
+
+`file` `core/database.js`
 ```javascript
-let ioc = require('kuul-ioc')
+var ioc = require('kuul-ioc')
 
 ioc.createModule(module)
-  .dependency('database', 'core/database')
   .module(function (dep, resolve, reject) {
+    /* dep is object with resolved dependencies, dependency name is first parameter of your dependency function
 
+    */
     dep.database
       .connect()
       .then(function(dbConnection) {
@@ -32,11 +36,35 @@ ioc.createModule(module)
 
   })
 ```
+> Module resolve
 
+`file` `index.js`
+```javascript
+var ioc = require('kuul-ioc')
+var appContainer = ioc.get('app').setBasePath(__dirname)
+
+appContainer.module('core/database').get()
+.then(function(dbConnection) {
+  /* do your stuff with your database connection */
+})
+```
+## Advanced usage example
+> Module definition
+
+`file` `core/database.js`
+```javascript
+
+```
+> Module resolve
+
+`file` `index.js`
+```javascript
+
+```
 ## Table of contents
 * [Examples](#)
-  * [Module definition - file based](#)
-    * [Promise](#)
+  * [Module definition - file](#)
+    * [Promise executor](#)
     * [ES6 generator function](#)
     * [ES7 async function](#)
   * [Module definition - on the fly](#)
@@ -47,8 +75,8 @@ ioc.createModule(module)
 * [Api](#api)
 
 
-## Module definition - file based
-#### Module definition - Promise executor
+## Module definition - file
+#### Module definition - file with Promise executor
 `file` `hello-world.js`
 ```javascript
 var ioc = require('ioc')
@@ -62,7 +90,7 @@ ioc
 })
 ```
 
-#### Module definition - ES6 generator function
+#### Module definition - file with ES6 generator function
 `file` `hello-world.js`
 ```javascript
 var ioc = require('ioc')
@@ -78,7 +106,7 @@ ioc
 })
 ```
 
-#### Module definition - ES7 async function
+#### Module definition - file with ES7 async function
 `file` `hello-world.js`
 ```javascript
 var ioc = require('ioc')
@@ -99,9 +127,9 @@ var ioc = require('ioc')
 
 var container = ioc.createContainer().setBasePath('/')
 /*
-we don't use
+Now you dont' pass module variable into createModule function
   ioc.createModule(module)
-but
+but you just left it empty
   ioc.createModule()
 */
 var onTheFlyModule = ioc
@@ -118,6 +146,16 @@ container.module('not/real/path').set(onTheFlyModule)
 ```
 
 ## Module resolve
+```javascript
+ioc.get('containerName').module('someModule').get()
+```
+> `get()` if module is singleton it will be resolved only first time, next time you call get() on singleton module it will return cached result, it will be exact same result as first time, see [Module resolve - singleton](#)
+
+```javascript
+ioc.get('containerName').module('someModule').resolve()
+```
+> `resolve()` Does not care if module is singleton, it will always return a new instance. Basically it always run your module function and fetch the result, see [Module resolve - factory](#)
+
 This will be our file structure
 
 `file` `core/config.js`
@@ -138,7 +176,10 @@ ioc
   return 'factory'
 })
 ```
-#### Singeton
+#### Module resolve - Singeton
+> Module is singeton by default, you don't have to use
+setSingleton(true), `file` `core/config.js`
+
 ```javascript
 var ioc = require('kuul-ioc')
 ioc.get('nameForContainer').setBasePath(__dirname)
@@ -153,7 +194,7 @@ moduleResolver.get().then(function(configA) {
       console.log( configA === configC )
       /* returns false
 
-        resolve() will ignore module singeton boolean, it will always run module executor function and fetch results
+        resolve() will ignore module singeton boolean, it will always run module executor function and fetch result
       */
     })
   })
@@ -162,6 +203,10 @@ moduleResolver.get().then(function(configA) {
 ```
 
 #### Factory
+> In this example `co` module is used to transform generator function to async control flow, you can read more about it here [https://www.npmjs.com/package/co](https://www.npmjs.com/package/co)
+
+> `kuul-ioc` use `co` module internaly to resolve your generator function, so you can use all it's features
+
 ```javascript
 var ioc = require('kuul-ioc')
 var co = require('co')
