@@ -29,12 +29,12 @@ ioc.createModule(module)
 .module(function (dep, resolve, reject) {
   console.log(dep.sentence)
   /* 'Anything can be there' */
-  console.log(dep.sentence.greeting)
+  console.log(dep.object.greeting)
   /* 'Hello world !' */
 
   /* some async work */
   setTimeout(function () {
-    resolve(dep.sentence.greeting)
+    resolve(dep.object.greeting)
   }, 1000)
 })
 ```
