@@ -12,6 +12,18 @@ class Container {
     return this
   }
 
+  getReplacements() {
+    return this.replacements
+  }
+
+  setReplacements(replacements) {
+    if (replacements.constructor.name == 'Container') {
+      replacements = replacements.getReplacements()
+    }
+    this.replacements = replacements
+    return this
+  }
+
   module (modulePath) {
     return new ModuleResolver({
       container: this,

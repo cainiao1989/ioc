@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/kuul-node-stuff/ioc.svg?branch=master)](https://travis-ci.org/kuul-node-stuff/ioc)
 
 ## Motivation
->  As Node.js developer I really missed some good asynchronous inversion of controll module for Node.js, there are some but I was not fully satisfied with them. Also using native Node.js require is not always best idea, definetly not for bigger project. Good IoC is foundation stone for every Javascript application, so here you have one :)
+>  As Node.js developer I really missed some good asynchronous inversion of control module for Node.js, there are some but I was not fully satisfied with them. Also using native Node.js require is not always best idea, definitely not for bigger project. Good IoC is foundation stone for every Javascript application, so here you have one :)
 
 ## Features
 * Resolve your dependencies asynchronously with promises
@@ -14,27 +14,29 @@
 * Simple mocking modules for tests and replacement
 * It's perfect to use if you like promises, ES6 generators or ES7 async / await features
 * You don't have to worry about `module.export` or `export` keyword anymore, `kuul-ioc` will handle that for you
-* Small and very powerfull library
+* Small and very powerful library
 
 ## Simple usage example
 > Module definition
 
-`file` `core/database.js`
+`file` `core/simple.js`
 ```javascript
 var ioc = require('kuul-ioc')
 
 ioc.createModule(module)
-  .module(function (dep, resolve, reject) {
-    /* dep is object with resolved dependencies, dependency name is first parameter of your dependency function
+.dependencyValue('sentence', 'Anything can be there')
+.dependencyValue('object', {'greeting' : 'Hello world !'})
+.module(function (dep, resolve, reject) {
+  console.log(dep.sentence)
+  /* 'Anything can be there' */
+  console.log(dep.sentence.greeting)
+  /* 'Hello world !' */
 
-    */
-    dep.database
-      .connect()
-      .then(function(dbConnection) {
-        resolve(dbConnection)
-      })
-
-  })
+  /* some async work */
+  setTimeout(function () {
+    resolve(dep.sentence.greeting)
+  }, 1000)
+})
 ```
 > Module resolve
 
@@ -43,9 +45,10 @@ ioc.createModule(module)
 var ioc = require('kuul-ioc')
 var appContainer = ioc.get('app').setBasePath(__dirname)
 
-appContainer.module('core/database').get()
-.then(function(dbConnection) {
-  /* do your stuff with your database connection */
+appContainer.module('core/simple').get()
+.then(function(simple) {
+  console.log(simple)
+  /* 'Hello world !' */
 })
 ```
 ## Advanced usage example
@@ -69,7 +72,7 @@ appContainer.module('core/database').get()
     * [ES7 async function](#)
   * [Module definition - on the fly](#)
   * [Module resolve](#)
-    * [Singeton](#)
+    * [Singleton](#)
     * [Factory](#)
     * [ES7 async/await](#)
 * [Api](#api)
@@ -205,7 +208,9 @@ moduleResolver.get().then(function(configA) {
 #### Factory
 > In this example `co` module is used to transform generator function to async control flow, you can read more about it here [https://www.npmjs.com/package/co](https://www.npmjs.com/package/co)
 
-> `kuul-ioc` use `co` module internaly to resolve your generator function, so you can use all it's features
+> `kuul-ioc` use `co` module internally to resolve your generator function, so you can use all it's features
+
+> `co` module internally use also `koa`
 
 ```javascript
 var ioc = require('kuul-ioc')
@@ -242,6 +247,8 @@ co(function* () {
 * [Container](#class-container)
   * [setBasePath(basePath)](#containersetbasepathbasepath)
   * [module(modulePath)](#containermodulemodulepath)
+  * [getReplacements()](#containergetreplacements)
+  * [setReplacements(mixed)](#containersetreplacementsmixed)
 * [Module](#class-module)
   * [setSingleton(boolean)](#modulesetsingletonboolean)
   * [dependency(name, mixed)](#moduledependencyname-mixed)
@@ -296,6 +303,19 @@ Parameter `module` is optional because you can create `Module` instance on fly s
 
 `return` `ModuleResolver` instance
 > Create `ModuleResolver` instance for module specified by `modulePath`
+
+#### container.getReplacements()
+
+`return` replacements Object
+> Get `Container` replacements Object
+
+#### container.setReplacements(`mixed`)
+
+  * `mixed` `Container` | `Object`
+
+`return` `ModuleResolver` instance
+> Set replacements object. Replacements object is used with all `ModuleResolved`.`set*` functions, also used when resolving replaced / mocked modules
+
 
 ## Class: Module
 

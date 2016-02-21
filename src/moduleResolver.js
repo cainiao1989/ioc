@@ -22,7 +22,7 @@ class ModuleResolver {
 
   checkForReplacement () {
     this.isReplacement = false
-    let moduleFullPath = this.getModuleNormalizePath()
+    var moduleFullPath = this.getModuleNormalizePath()
     if (this.container.replacements[moduleFullPath] !== undefined) {
       this.isReplacement = true
       this.replacement = this.container.replacements[moduleFullPath]
@@ -37,7 +37,7 @@ class ModuleResolver {
       return this.replacement.moduleResolver
     }
     if (this.replacement.type == 'module') {
-      return new ModuleResolver({ container: this.container, module: this.replacement.module })
+      return new ModuleResolver({ container: this.container, module: this.replacement.module, modulePath: this.modulePath })
     }
     return this
   }
