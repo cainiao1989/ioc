@@ -16,6 +16,10 @@
 * You don't have to worry about `module.export` or `export` keyword anymore, `kuul-ioc` will handle that for you
 * Small and very powerful library
 
+## Installation
+```
+$ npm install kuul-ioc
+```
 ## Simple usage example
 > Module definition
 
