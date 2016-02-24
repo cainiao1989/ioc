@@ -75,7 +75,7 @@ ioc.createModule(module)
 
 })
 .dependencyFunctionOnce('', function(resolve, reject) {
-  
+
 })
 .module(function (dep, resolve, reject) {
   console.log(dep.sentence)
@@ -96,7 +96,7 @@ ioc.createModule(module)
 var ioc = require('kuul-ioc')
 var appContainer = ioc.get('app').setBasePath(__dirname)
 
-appContainer.module('core/simple').get()
+appContainer.module('core/advanced').get()
 .then(function(simple) {
   console.log(simple)
   /* 'Hello world !' */
