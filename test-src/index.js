@@ -82,6 +82,7 @@ describe('module.dependency', function () {
       assert.equal(module.module, 'config ok')
       assert.equal(module.module2, 'config ok')
       assert.equal(module.moduleResolver, 'config ok')
+      assert.equal(module.moduleOnTheFly, 'moduleOnTheFly ok')
       assert.equal(module.value, 'value ok')
       assert.deepEqual(module.generator, { name: 'generator ok', count: 1 })
       assert.deepEqual(module.generatorOnce, { name: 'generatorOnce ok', count: 1 })

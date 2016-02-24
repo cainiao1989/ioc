@@ -2,6 +2,12 @@ ioc.createModule(module)
   .dependency('module', './config')
   .dependency('module2', '../modules/config')
   .dependency('moduleResolver', ioc.get('test').module('modules/config') )
+  .dependency('moduleOnTheFly',
+    ioc.createModule()
+    .module(async function () {
+      return 'moduleOnTheFly ok'
+    })
+  )
   .dependencyValue('value', 'value ok')
   .dependencyFunction(
     'generator',

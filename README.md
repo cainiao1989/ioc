@@ -54,15 +54,53 @@ appContainer.module('core/simple').get()
 ## Advanced usage example
 > Module definition
 
-`file` `core/database.js`
+`file` `core/advanced.js`
 ```javascript
+var ioc = require('kuul-ioc')
+var someContainer = ioc.createContainer().setBasePath(__dirname)
 
+ioc.createModule(module)
+.dependency('simple', 'core/simple')
+.dependency('simpleRelative', './simple')
+.dependency('moduleResolver', someContainer.module('config') )
+.dependency('moduleOnTheFly',
+  ioc.createModule()
+  .dependencyValue('sentence', 'Anything can be there')
+  .module(function(dep, resolve, reject) {
+    resolve(dep.sentence)
+  })
+)
+.dependencyValue('sentence', 'Anything can be there')
+.dependencyFunction('', function(resolve, reject) {
+
+})
+.dependencyFunctionOnce('', function(resolve, reject) {
+  
+})
+.module(function (dep, resolve, reject) {
+  console.log(dep.sentence)
+  /* 'Anything can be there' */
+  console.log(dep.object.greeting)
+  /* 'Hello world !' */
+
+  /* some async work */
+  setTimeout(function () {
+    resolve(dep.object.greeting)
+  }, 1000)
+})
 ```
 > Module resolve
 
 `file` `index.js`
 ```javascript
+var ioc = require('kuul-ioc')
+var appContainer = ioc.get('app').setBasePath(__dirname)
 
+appContainer.module('core/simple').get()
+.then(function(simple) {
+  console.log(simple)
+  /* 'Hello world !' */
+})
 ```
 ## Table of contents
 * [Examples](#)

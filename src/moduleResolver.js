@@ -152,7 +152,7 @@ class ModuleResolver {
         dependencyValue = await dependency.moduleResolver.get()
         break
       case 'module':
-        dependencyValue = await new ModuleResolver({container: this.container, module: this.replacement.module}).get()
+        dependencyValue = await new ModuleResolver({container: this.container, module: dependency.module}).get()
         break
       case 'value':
         dependencyValue = dependency.value

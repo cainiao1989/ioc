@@ -2,7 +2,9 @@
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
 
-ioc.createModule(module).dependency('module', './config').dependency('module2', '../modules/config').dependency('moduleResolver', ioc.get('test').module('modules/config')).dependencyValue('value', 'value ok').dependencyFunction('generator', (() => {
+ioc.createModule(module).dependency('module', './config').dependency('module2', '../modules/config').dependency('moduleResolver', ioc.get('test').module('modules/config')).dependency('moduleOnTheFly', ioc.createModule().module(_asyncToGenerator(function* () {
+  return 'moduleOnTheFly ok';
+}))).dependencyValue('value', 'value ok').dependencyFunction('generator', (() => {
   let count = 0;
   return function* () {
     count++;
