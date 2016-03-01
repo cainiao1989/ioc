@@ -136,6 +136,11 @@ class ModuleResolver {
         return reject(error)
       }
 
+      /* module dont have specified ! */
+      if (!self.module.moduleExecutor) {
+        return reject(new Error(`${self.getModuleNormalizePath()} is not valid kuul-ioc module`))
+      }
+
       /* dependencies was resolved we can launch moduleExecutor */
       Module.resolveExecutor(resolve, reject, self.module.moduleExecutor, dependencies)
 
@@ -216,41 +221,53 @@ class ModuleResolver {
   }
 
   resolve () {
-    /* check for replacement */
-    let self = this
+    try {
+      let self = this
 
-    if (this.isReplacement) {
-      return this.resolveReplacement()
+      if (this.isReplacement) {
+        return this.resolveReplacement()
+      }
+
+      try {
+        this.requireModule();
+      } catch (error) {
+        return new Promise((resolve, reject) => { reject(error) })
+      }
+
+      let promise = this.moduleExecutorPromise()
+
+      if (this.module.singleton === true && this.module.promise === undefined) {
+        this.module.promise = promise
+      }
+
+      return promise
+
+    } catch (error) {
+      return new Promise((resolve, reject) => { reject(error) })
     }
-
-    this.requireModule()
-
-    let promise = this.moduleExecutorPromise()
-
-    if (this.module.singleton === true && this.module.promise === undefined) {
-      this.module.promise = promise
-    }
-
-    return promise
   }
 
   get () {
-    /* check for replacement */
-    let self = this
+    try {
+      let self = this
 
-    if (this.isReplacement) {
-      return this.resolveReplacement()
+      if (this.isReplacement) {
+        return this.resolveReplacement()
+      }
+
+      this.requireModule();
+
+      /* singleton ? */
+      if (this.module.singleton === true && this.module.promise !== undefined) {
+        return this.module.promise
+      }
+
+      /* module resolve promise */
+      return this.resolve()
+
+    } catch (error) {
+      return new Promise((resolve, reject) => { reject(error) })
     }
-
-    this.requireModule()
-
-    /* singleton ? */
-    if (this.module.singleton === true && this.module.promise !== undefined) {
-      return this.module.promise
-    }
-
-    /* module resolve promise */
-    return this.resolve()
   }
 }
 
