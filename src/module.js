@@ -1,5 +1,5 @@
 //let asyncToGenerator = require('./asyncToGenerator')
-let co = require('co')
+const co = require('co')
 
 class Module {
   static resolveExecutor(resolve, reject, executorFunction, dependencies) {
@@ -111,6 +111,7 @@ class Module {
   constructor (module) {
     this.nodeModule = module
     this.singleton = true
+
     this.dependencies = {}
     return this
   }

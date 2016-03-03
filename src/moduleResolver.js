@@ -1,5 +1,5 @@
-let path = require('path')
-let Module = require('./module')
+const path = require('path')
+const Module = require('./module')
 
 class ModuleResolver {
   constructor (options) {

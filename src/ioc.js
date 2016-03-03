@@ -1,5 +1,5 @@
-let Container = require('./container')
-let Module = require('./module.js')
+const Container = require('./container')
+const Module = require('./module.js')
 
 class Ioc {
   constructor () {
