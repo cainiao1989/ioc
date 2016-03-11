@@ -20,6 +20,9 @@
 ```
 $ npm install kuul-ioc
 ```
+## Example folder
+ You can see example usage for sample koa server
+
 ## Simple usage example
 > Module definition
 
@@ -75,11 +78,11 @@ ioc.createModule(module)
   })
 )
 .dependencyValue('sentence', 'Anything can be there')
-.dependencyFunction('', function(resolve, reject) {
-
+.dependencyFunction('fcePromiseExecutor', function(resolve, reject) {
+  resolve('This is like factory')
 })
-.dependencyFunctionOnce('', function(resolve, reject) {
-
+.dependencyFunctionOnce('fceGeneratorOnce', function* () {
+  yield 'This is like singleton'
 })
 .module(function (dep, resolve, reject) {
   console.log(dep.sentence)
@@ -247,7 +250,7 @@ moduleResolver.get().then(function(configA) {
 
 ```
 
-#### Factory
+#### Module resolve - Factory
 > In this example `co` module is used to transform generator function to async control flow, you can read more about it here [https://www.npmjs.com/package/co](https://www.npmjs.com/package/co)
 
 > `kuul-ioc` use `co` module internally to resolve your generator function, so you can use all it's features
@@ -261,15 +264,15 @@ var co = require('co')
 ioc.get('nameForContainer').setBasePath(__dirname)
 var moduleResolver = ioc.get('nameForContainer').module('core/factory')
 co(function* () {
-  var configA = yield moduleResolver.get()
-  var configB = yield moduleResolver.get()
-  var configC = yield moduleResolver.get()
+  var factoryA = yield moduleResolver.get()
+  var factoryB = yield moduleResolver.get()
+  var factoryC = yield moduleResolver.get()
   /* this would be same as above, because core/factory.js have
     setSingleton(false)
 
-  var configA = yield moduleResolver.resolve()
-  var configB = yield moduleResolver.resolve()
-  var configC = yield moduleResolver.resolve()
+  var factoryA = yield moduleResolver.resolve()
+  var factoryB = yield moduleResolver.resolve()
+  var factoryC = yield moduleResolver.resolve()
   */
 
   console.log( configA === configB )
@@ -278,6 +281,28 @@ co(function* () {
   /* returns false */
 
 })
+```
+
+#### Module resolve - ES7 async/await
+> To run this example, you have to use some compiler, ex. [babel](https://babeljs.io/)
+
+`file` `.babelrc`
+```json
+{
+  "presets": [ "es2015-node5", "stage-3" ]
+}
+```
+
+```javascript
+var ioc = require('kuul-ioc')
+var co = require('co')
+
+ioc.get('nameForContainer').setBasePath(__dirname)
+var moduleResolver = ioc.get('nameForContainer').module('core/factory')
+
+(async function() {
+  var factory = await moduleResolver.get()
+})()
 ```
 
 ## Api
