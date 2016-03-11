@@ -1,6 +1,6 @@
 {
   "name": "kuul-ioc",
-  "description": "Node.js promise based inversion of control",
+  "description": "Node.js and browser module for asynchronous promise based inversion of control",
   "keywords": [
     "kuul-ioc",
     "kuul",
