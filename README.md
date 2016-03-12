@@ -1,17 +1,17 @@
-# Kuul-ioc  Node.js and browser module for asynchronous promise based inversion of control
+# Kuul-ioc - node.js and browser module for promise based asynchronous inversion of control
 [![npm package](https://nodei.co/npm/kuul-ioc.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/kuulioc/)
 
 [![Build Status](https://travis-ci.org/kuul-node-stuff/ioc.svg?branch=master)](https://travis-ci.org/kuul-node-stuff/ioc)
 
 ## Motivation
->  As Node.js developer I really missed some good asynchronous inversion of control module for Node.js, there are some but I was not fully satisfied with them. Also using native Node.js require is not always best idea, definitely not for bigger project. Good IoC is foundation stone for every Javascript application, so here you have one :)
+>  As a node.js developer I've been missing some good asynchronous inversion of control module for Node.js. There are some, but I was not fully satisfied with them. Using native Node.js require is not always best idea, specifically for larger project. Good IoC is a foundation stone for every Javascript application, so here comes one :).
 
 ## Features
 * Resolve your dependencies asynchronously with promises
 * Module logic can be wrapped into promise executor, generator function or async function
 * Resolve singleton instance of your module
-* You can extend ( add or replace ) dependencies when you resolving module
-* Simple mocking modules for tests and replacement
+* You can extend (add or replace) dependencies when you are resolving module
+* Simple mocking modules for tests and replacements
 * It's perfect to use if you like promises, ES6 generators or ES7 async / await features
 * You don't have to worry about `module.export` or `export` keyword anymore, `kuul-ioc` will handle that for you
 * Small and very powerful library
@@ -177,7 +177,7 @@ var container = ioc.createContainer().setBasePath('/')
 /*
 Now you dont' pass module variable into createModule function
   ioc.createModule(module)
-but you just left it empty
+  you leave it empty
   ioc.createModule()
 */
 var onTheFlyModule = ioc
@@ -197,12 +197,12 @@ container.module('not/real/path').set(onTheFlyModule)
 ```javascript
 ioc.get('containerName').module('someModule').get()
 ```
-> `get()` if module is singleton it will be resolved only first time, next time you call get() on singleton module it will return cached result, it will be exact same result as first time, see [Module resolve - singleton](#)
+> `get()` if module is singleton it will be resolved only the first time, next time you call get() on singleton module it will return cached result - it will be exact same result as the first time, see [Module resolve - singleton](#)
 
 ```javascript
 ioc.get('containerName').module('someModule').resolve()
 ```
-> `resolve()` Does not care if module is singleton, it will always return a new instance. Basically it always run your module function and fetch the result, see [Module resolve - factory](#)
+> `resolve()` Does not care if module is a singleton, it will always return a new instance - it always run your module function and fetch the result, see [Module resolve - factory](#)
 
 This will be our file structure
 
@@ -225,7 +225,7 @@ ioc
 })
 ```
 #### Module resolve - Singeton
-> Module is singeton by default, you don't have to use
+> Module is singleton by default, you don't have to use
 setSingleton(true), `file` `core/config.js`
 
 ```javascript
@@ -242,7 +242,7 @@ moduleResolver.get().then(function(configA) {
       console.log( configA === configC )
       /* returns false
 
-        resolve() will ignore module singeton boolean, it will always run module executor function and fetch result
+        resolve() will ignore module singleton boolean, it will always run module executor function and fetch result
       */
     })
   })
@@ -255,7 +255,7 @@ moduleResolver.get().then(function(configA) {
 
 > `kuul-ioc` use `co` module internally to resolve your generator function, so you can use all it's features
 
-> `co` module internally use also `koa`
+> `co` module internally also uses `koa`
 
 ```javascript
 var ioc = require('kuul-ioc')
@@ -267,7 +267,7 @@ co(function* () {
   var factoryA = yield moduleResolver.get()
   var factoryB = yield moduleResolver.get()
   var factoryC = yield moduleResolver.get()
-  /* this would be same as above, because core/factory.js have
+  /* this would be the same as above, because core/factory.js have
     setSingleton(false)
 
   var factoryA = yield moduleResolver.resolve()
@@ -284,7 +284,7 @@ co(function* () {
 ```
 
 #### Module resolve - ES7 async/await
-> To run this example, you have to use some compiler, ex. [babel](https://babeljs.io/)
+> To run this example, you will have to use some compiler, ex. [babel](https://babeljs.io/)
 
 `file` `.babelrc`
 ```json
@@ -341,21 +341,21 @@ var moduleResolver = ioc.get('nameForContainer').module('core/factory')
   * `name` `String`  Name of container
 
 `return` `Container` instance
-> Create new or return existing instance of `Container`
+> Create new or return an existing instance of `Container`
 
 #### ioc.createContainer()
 
 `return` `Container` instance
-> Create new instance of `Container`
+> Create a new instance of `Container`
 
 #### ioc.createModule([`module`])
   * `module` Node.js `module` keyword, used to `module.exports` or `exports` Objects from native Node.js module system
 
 `return` `Module` instance
 
-> Create new instance of `Module`
+> Create a new instance of `Module`
 
-Parameter `module` is optional because you can create `Module` instance on fly so `kuulioc` will not internally call `require` function to get `Module` instance. So basically you don't provide any parameter when creating `Module` instance on fly.
+Parameter `module` is optional because you can create `Module` instance on the fly - `kuulioc` will not internally call `require` function to get `Module` instance. So basically, you don't provide any parameters when your're creating `Module` instance on the fly.
 
 ## Class: Container
 
@@ -363,7 +363,7 @@ Parameter `module` is optional because you can create `Module` instance on fly s
   * `basePath` `String`  Base path of container
 
 `return` `Container` instance
-> Set base path of container
+> Set base path of the container
 
 #### container.module(`modulePath`)
   * `modulePath` `String`  Path to requested module
@@ -374,14 +374,14 @@ Parameter `module` is optional because you can create `Module` instance on fly s
 #### container.getReplacements()
 
 `return` replacements Object
-> Get `Container` replacements Object
+> Get a `Container` replacements Object
 
 #### container.setReplacements(`mixed`)
 
   * `mixed` `Container` | `Object`
 
 `return` `ModuleResolver` instance
-> Set replacements object. Replacements object is used with all `ModuleResolved`.`set*` functions, also used when resolving replaced / mocked modules
+> Set replacements object. Replacements object is used with all `ModuleResolved`.`set*` functions, also used when resolving replaced/mocked modules
 
 
 ## Class: Module
@@ -390,74 +390,74 @@ Parameter `module` is optional because you can create `Module` instance on fly s
 * `boolean` `Boolean`
 
 `return` `Module` instance
-> It specify if module should be resolved as singleton or new instance every time you resolve it
+> It specify if module should be resolved as a singleton or a new instance every time you resolve it
 
 #### module.dependency(`name`, `mixed`)
-* `name` `String`  Name of dependency when it will be resolved and put in module function
+* `name` `String`  Name of a dependency when it will be resolved and put in a module function
 * `mixed` `String` | `ModuleResolver` | `Module`
 
 `return` `Module` instance
-> Add dependency to your module
+> Add a dependency to your module
 
 #### module.dependencyValue(`name`, `mixed`)
-* `name` `String`  Name of dependency when it will be resolved and put in module function
+* `name` `String`  Name of the dependency when it gets resolved and put in a module function
 * `mixed` `Mixed`  Anything
 
 `return` `Module` instance
-> Add dependency to your module
+> Add a dependency to your module
 
 #### module.dependencyFunction(`name`, `mixed`)
-* `name` `String`  Name of dependency when it will be resolved and put in module function
+* `name` `String`  Name of the dependency when it gets resolved and put in module function
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `Module` instance
-> Add dependency to your module
+> Add a dependency to your module
 
 #### module.dependencyFunctionOnce(`name`, `mixed`)
-* `name` `String`  Name of dependency when it will be resolved and put in module function
+* `name` `String`  Name of the dependency when it gets resolved and put in module function
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `Module` instance
-> Add dependency to your module
+> Add a dependency to your module
 
 #### module.module(`mixed`)
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `Module` instance
-> Function that handle logic of module or in other words function that return content of module
+> Function that handle a logic of module - function that return content of module
 
 ## Class: ModuleResolver
 #### moduleResolver.get()
 `return` `Promise` instance
-> Asynchronously resolve module, if module is singleton it will be resolved only first time, next time you call get() on singleton module it will return the same result as first time
+> Asynchronously resolve module: if module is singleton it gets resolved only the first time, next time you call get() on singleton module it returns the same result as a first time
 
 #### moduleResolver.resolve()
 `return` `Promise` instance
-> Asynchronously resolve module, it does not care if module is singleton, it will always return a new instance. Basically it always run your module function and fetch the result
+> Asynchronously resolve module, it does not care if module is singleton, it always returns a new instance - it always run your module function and fetch the result
 
 #### moduleResolver.extend(`name`, `mixed`)
-* `name` `String`  Name of dependency that will be added or replaced
+* `name` `String`  Name of the added or replaced dependency
 * `mixed` `String` | `ModuleResolver` | `Module`
 
 `return` `ModuleResolver` instance
-> Add or replace dependency to your module
+> Add or replace a dependency to your module
 
 #### moduleResolver.extendValue(`name`, `mixed`)
-* `name` `String`  Name of dependency that will be added or replaced
+* `name` `String`  Name of the added or replaced dependency
 * `mixed` `Mixed`  Anything
 
 `return` `ModuleResolver` instance
 > Add or replace dependency to your module
 
 #### moduleResolver.extendFunction(`name`, `mixed`)
-* `name` `String`  Name of dependency that will be added or replaced
+* `name` `String`  Name of the added or replaced dependency
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `ModuleResolver` instance
 > Add or replace dependency to your module
 
 #### moduleResolver.extendFunctionOnce(`name`, `mixed`)
-* `name` `String`  Name of dependency that will be added or replaced
+* `name` `String`  Name of the added or replaced dependency
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `ModuleResolver` instance
@@ -467,22 +467,22 @@ Parameter `module` is optional because you can create `Module` instance on fly s
 * `mixed` `String` | `ModuleResolver` | `Module`
 
 `return` `ModuleResolver` instance
-> It replace your module
+> It replaces your module
 
 #### moduleResolver.setValue(`mixed`)
 * `mixed` `Mixed`  Anything
 
 `return` `ModuleResolver` instance
-> It replace your module
+> It replaces your module
 
 #### moduleResolver.setFunction(`mixed`)
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `ModuleResolver` instance
-> It replace your module
+> It replaces your module
 
 #### moduleResolver.setFunctionOnce(`mixed`)
 * `mixed` `Function` | `GeneratorFunction` | `AsyncFunction`
 
 `return` `ModuleResolver` instance
-> It replace your module
+> It replaces your module
