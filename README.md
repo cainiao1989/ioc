@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/kuul-node-stuff/ioc.svg?branch=master)](https://travis-ci.org/kuul-node-stuff/ioc)
 
 ## Motivation
->  As a node.js developer I've been missing some good asynchronous inversion of control module for Node.js. There are some, but I was not fully satisfied with them. Using native Node.js require is not always best idea, specifically for larger project. Good IoC is a foundation stone for every Javascript application, so here comes one :).
+>  As a node.js developer I've been missing some good asynchronous inversion of control module for Node.js. There are some, but I was not fully satisfied with them. Using native Node.js require is not always a good idea, especially for a large project. Good IoC is the foundation stone for every Javascript application, so I present you one :).
 
 ## Features
 * Resolve your dependencies asynchronously with promises
