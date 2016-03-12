@@ -1,4 +1,4 @@
-global.ioc = require(`${process.cwd()}`)
+global.ioc = require('kuul-ioc')
 
 ioc.get('app').setBasePath(`${__dirname}`)
 ioc.get('config').setBasePath(`${__dirname}/core/config`)

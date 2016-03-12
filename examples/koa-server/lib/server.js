@@ -5,7 +5,6 @@ ioc.createModule(module)
 .dependency('http', './core/http')
 .dependencyValue('fs', require('fs'))
 .module(function* (dep) {
-  /* wait for db connect */
   const resourceNames = yield (callback) => dep.fs.readdir(ioc.get('resource').basePath, callback)
 
   /* load all routes */
